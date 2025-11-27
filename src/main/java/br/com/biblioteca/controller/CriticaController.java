@@ -24,6 +24,16 @@ public class CriticaController {
         return ResponseEntity.created(URI.create("/api/criticas/" + created.getId())).body(created);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CriticaDTO> getOne(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getOne(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CriticaDTO> update(@PathVariable Long id, @Valid @RequestBody CriticaDTO dto) {
+        return ResponseEntity.ok(service.update(id, dto));
+    }
+
     @GetMapping("/livro/{livroId}")
     public ResponseEntity<List<CriticaDTO>> listByLivro(@PathVariable Long livroId) {
         return ResponseEntity.ok(service.listByLivro(livroId));

@@ -46,6 +46,30 @@ public class CriticaService {
         return toDTO(saved);
     }
 
+    public CriticaDTO getOne(Long id) {
+        Critica c = criticaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Crítica não encontrada: " + id));
+        return toDTO(c);
+    }
+
+    public CriticaDTO update(Long id, CriticaDTO dto) {
+        Critica c = criticaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Crítica não encontrada: " + id));
+
+        c.setConteudo(dto.getConteudo());
+        c.setNota(dto.getNota());
+        c.setUsuario(dto.getUsuario());
+
+        if (dto.getLivroId() != null && !dto.getLivroId().equals(c.getLivro().getId())) {
+            Livro l = livroRepository.findById(dto.getLivroId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado: " + dto.getLivroId()));
+            c.setLivro(l);
+        }
+
+        Critica updated = criticaRepository.save(c);
+        return toDTO(updated);
+    }
+
     public void delete(Long id) {
         Critica c = criticaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Crítica não encontrada: " + id));
         criticaRepository.delete(c);
